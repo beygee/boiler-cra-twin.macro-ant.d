@@ -1,17 +1,36 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import 'react-app-polyfill/ie11'
+import 'react-app-polyfill/stable'
+import 'antd/dist/antd.less'
+import 'src/styles/global.css'
+
+import ReactDOM from 'react-dom'
+import { BrowserRouter } from 'react-router-dom'
+
+import App from './App'
+import { ConfigProvider } from 'antd'
+import koKR from 'antd/es/locale/ko_KR'
+
+import { ThemeProvider } from '@emotion/react'
+import theme from 'src/styles/theme'
+import { Provider } from 'react-redux'
+import store from './stores'
+import { QueryClient, QueryClientProvider } from 'react-query'
+import { ReactQueryDevtools } from 'react-query/devtools'
+
+const queryClient = new QueryClient()
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+  <QueryClientProvider client={queryClient}>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <ConfigProvider locale={koKR}>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </ConfigProvider>
+      </ThemeProvider>
+    </Provider>
+    <ReactQueryDevtools initialIsOpen={false} />
+  </QueryClientProvider>,
+  document.getElementById('root'),
+)
